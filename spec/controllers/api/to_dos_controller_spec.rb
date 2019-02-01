@@ -81,5 +81,29 @@ RSpec.describe Api::ToDosController, type: :controller do
       expect(to_do_1.reload.status).to eq('not_start')
     end
   end
+
+  describe 'delete /api/to_dos/:id' do
+    let!(:tag) { Tag.create(name: 'tag 1') }
+    let!(:to_do_1) do
+      ToDo.create(name: 'todo 1', description: 'for doing',
+                  status: 'start', tag_id: tag.id, is_deleted: false)
+    end
+    it 'marks the to_do as deleted' do
+      delete :destroy, id: to_do_1.id
+      expect(to_do_1.reload.is_deleted).to eq(true)
+    end
+  end
+
+  describe 'put /api/to_dos/:id/is_deleted' do
+    let!(:tag) { Tag.create(name: 'tag 1') }
+    let!(:to_do_1) do
+      ToDo.create(name: 'todo 1', description: 'for doing',
+                  status: 'start', tag_id: tag.id, is_deleted: true)
+    end
+    it 'marks the to_do as not deleted' do
+      put :undo_delete, id: to_do_1.id
+      expect(to_do_1.reload.is_deleted).to eq(false)
+    end
+  end
 end
 # rubocop:enable Metrics/BlockLength

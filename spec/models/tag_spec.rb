@@ -1,5 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe Tag, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  it { is_expected.to have_field(:name).of_type(String) }
+  it { is_expected.to have_many :to_dos }
 end
