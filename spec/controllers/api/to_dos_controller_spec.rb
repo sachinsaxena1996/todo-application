@@ -5,18 +5,29 @@ RSpec.describe Api::ToDosController, type: :controller do
   render_views
 
   describe 'get /api/to_dos' do
+    let!(:tag) { Tag.create(name: 'tag 1') }
     let!(:to_do_1) do
       ToDo.create(name: 'todo 1', description: 'for doing',
-                  status: 'start', tag_id: '', is_deleted: false)
+                  status: 'start', tag_id: tag.id, is_deleted: false)
     end
     let!(:to_do_2) do
       ToDo.create(name: 'todo 2', description: 'for doing 2',
-                  status: 'not_start', tag_id: '', is_deleted: false)
+                  status: 'not_start', tag_id: tag.id, is_deleted: false)
     end
     it 'shows all to_dos' do
       get :index
       json = JSON.parse(response.body)
       expect(json.length).to eq(2)
+      expect(json[0]).to match(a_hash_including(
+                                 '_id' => { '$oid' => to_do_1.id.to_s },
+                                 'name' => to_do_1.name,
+                                 'description' => to_do_1.description,
+                                 'status' => to_do_1.status,
+                                 'tag_id' => {
+                                   '$oid' => tag.id.to_s
+                                 },
+                                 'is_deleted' => to_do_1.is_deleted
+      ))
     end
   end
 
@@ -50,23 +61,6 @@ RSpec.describe Api::ToDosController, type: :controller do
     end
   end
 
-  describe 'get /api/to_dos/:id/find_to_dos' do
-    let!(:tag) { Tag.create(name: 'tag 1') }
-    let!(:to_do_1) do
-      ToDo.create(name: 'todo 1', description: 'for doing',
-                  status: 'start', tag_id: tag.id, is_deleted: false)
-    end
-    let!(:to_do_2) do
-      ToDo.create(name: 'todo 2', description: 'for doing 2',
-                  status: 'start', tag_id: tag.id, is_deleted: false)
-    end
-    it 'finds all the todo items by tag' do
-      get :find_to_dos, tag_name: tag.name
-      json = JSON.parse(response.body)
-      expect(json.length).to eq(2)
-    end
-  end
-
   describe 'put /api/to_dos/:id' do
     let!(:tag) { Tag.create(name: 'tag 1') }
     let!(:to_do_1) do
@@ -77,8 +71,8 @@ RSpec.describe Api::ToDosController, type: :controller do
       put :update, id: to_do_1.id, name: 'todo 2',
                    description: 'for doing 2', status: 'not_start'
       expect(to_do_1.reload.name).to eq('todo 2')
-      expect(to_do_1.reload.description).to eq('for doing 2')
-      expect(to_do_1.reload.status).to eq('not_start')
+      expect(to_do_1.description).to eq('for doing 2')
+      expect(to_do_1.status).to eq('not_start')
     end
   end
 

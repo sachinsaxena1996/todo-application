@@ -4,7 +4,7 @@ module Api
     # Pagination of todo item list
     def index
       @to_dos = ToDo.all.page params[:page]
-      render status: :ok
+      render status: :ok, json: @to_dos.to_a
     end
 
     def create
