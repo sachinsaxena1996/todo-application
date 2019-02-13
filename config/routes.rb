@@ -7,7 +7,7 @@ Rails.application.routes.draw do
     end
 
     resources :tags, except: %i[index create update destroy show] do
-      get 'find_to_dos', on: :collection
+      get 'todos', on: :collection
     end
   end
 end

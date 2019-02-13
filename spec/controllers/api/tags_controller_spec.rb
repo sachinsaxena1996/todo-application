@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Api::TagsController, type: :controller do
   render_views
 
-  describe 'get /api/tags/:id/find_to_dos' do
+  describe 'get /api/tags/:id/todos' do
     let!(:tag) { Tag.create(name: 'tag 1') }
     let!(:to_do_1) do
       ToDo.create(name: 'todo 1', description: 'for doing',
@@ -14,7 +14,7 @@ RSpec.describe Api::TagsController, type: :controller do
                   status: 'start', tag_id: tag.id, is_deleted: false)
     end
     it 'finds all the todo items by tag' do
-      get :find_to_dos, tag_name: tag.name
+      get :todos, tag_name: tag.name
       json = JSON.parse(response.body)
       expect(json.length).to eq(2)
     end
