@@ -22,7 +22,7 @@ module Api
       if @to_do.present?
         update_status_response(params[:status])
       else
-        render status: :bad_request, json: {}
+        render status: :not_found, json: {}
       end
     end
 
@@ -43,18 +43,7 @@ module Api
         @to_do.update(tag_id: tag.id.to_s)
         render status: :ok
       else
-        render status: :bad_request, json: {}
-      end
-    end
-
-    # Find all todo items by tag
-    def find_to_dos
-      @tag = Tag.where(name: params[:tag_name]).first
-      if @tag.present?
-        @to_dos = @tag.to_dos
-        render status: :ok
-      else
-        render status: :bad_request, json: {}
+        render status: :not_found, json: {}
       end
     end
 
@@ -64,7 +53,7 @@ module Api
       if @to_do.present?
         update_params(params)
       else
-        render status: :bad_request, json: {}
+        render status: :not_found, json: {}
       end
     end
 
@@ -88,14 +77,22 @@ module Api
 
     def destroy
       @to_do = ToDo.find(params[:id].to_s)
-      @to_do.update(is_deleted: true)
-      render status: :ok
+      if @to_do.present?
+        @to_do.update(is_deleted: true)
+        render status: :ok
+      else
+        render status: :not_found, json: {}
+      end
     end
 
     def undo_delete
       @to_do = ToDo.find(params[:id].to_s)
-      @to_do.update(is_deleted: false)
-      render status: :ok
+      if @to_do.present?
+        @to_do.update(is_deleted: false)
+        render status: :ok
+      else
+        render status: :not_found, json: {}
+      end
     end
 
     private

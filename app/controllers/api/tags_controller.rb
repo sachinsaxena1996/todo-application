@@ -8,7 +8,6 @@ module Api
         @to_dos = @tag.to_dos
         render status: :ok
       else
-        # render status: :bad_request, json: {}
         render status: :not_found, json: {}
       end
     end
