@@ -116,6 +116,7 @@ GEM
     rabl (0.14.0)
       activesupport (>= 2.3.14)
     rack (1.6.11)
+    rack-cors (1.0.2)
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (4.2.7.1)
@@ -236,6 +237,7 @@ DEPENDENCIES
   mongoid-rspec (~> 3.0)
   oj
   rabl
+  rack-cors
   rails (= 4.2.7.1)
   responders (~> 2.0)
   rspec-rails (= 3.4.2)
@@ -248,4 +250,4 @@ DEPENDENCIES
   web-console (~> 2.0)
 
 BUNDLED WITH
-   1.16.1
+   1.16.6
