@@ -85,6 +85,16 @@ module Api
       end
     end
 
+    def show
+      @to_do = ToDo.find(params[:id].to_s)
+      if @to_do.present?        
+        render status: :ok
+      else
+        render status: :not_found, json: {}
+      end
+    end
+
+
     def undo_delete
       @to_do = ToDo.find(params[:id].to_s)
       if @to_do.present?
